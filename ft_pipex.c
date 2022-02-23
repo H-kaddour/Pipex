@@ -6,7 +6,7 @@
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 15:03:00 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/02/21 18:23:34 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:37:22 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	ft_pipex_it(int filein, int fileout, char **av, char *env[])
 	t_end	pix;
 
 	pipe(pix.fd);
+	if (!pipe(pix.fd))
+		exit (1);
 	pix.child = fork();
 	if (pix.child == -1)
 	{
