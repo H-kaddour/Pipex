@@ -28,6 +28,8 @@ https://cdn.intra.42.fr/pdf/pdf/44339/en.subject.pdf
 18. exit: [Check it out.](https://www.geeksforgeeks.org/understanding-exit-abort-and-assert/)
 19. Makefile color font: [Check it out.](https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux)
 20. Posix name: [Check it out.](https://www.google.com/search?q=posix+name&rlz=1C5CHFA_enMA972MA972&oq=posix+name&aqs=chrome..69i57.3680j0j7&sourceid=chrome&ie=UTF-8)
+**You can also man those fuction.**
+![image](img/pipex.png)
 
 # My final point:
 ![image](img/point.png)
