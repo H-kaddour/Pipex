@@ -1,43 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pipex.h                                         :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:29:44 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/02/21 18:22:37 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/10/18 18:08:49 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PIPEX_H
-# define FT_PIPEX_H
+#ifndef PIPEX_H
+# define PIPEX_H
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <signal.h>
 # include <fcntl.h>
 # include <sys/types.h>
+# include "../libft/libft.h"
 
-typedef struct pipex
+typedef struct s_data
 {
-	char	*ptr;
-	char	**o_path;
-	char	**flags;
-	char	*n_path;
+	char	**av;
+	char	**env;
+	char	**path;
+	char	**cmd_opt;
+	char	**leak;
+	int		i;
+	int		proc;
 	int		fd[2];
-	int		child;
-	int		fdin;
-	int		fdout;
-}	t_end;
+	int		f_in;
+	int		f_out;
+}	t_data;
 
-void	ft_pipex_it(int filein, int fileout, char **av, char **env);
-void	ft_exec(char *av, char **env);
-char	**ft_get_path(char **env);
-char	**ft_split(char const *s, char c);
-int		ft_check(char *av, char sp);
-size_t	ft_strlen(const	char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void	processes_making(t_data *data);
+void	get_path(t_data *data, char **env);
+char *add_join(t_data *data, char *path, char *cmd);
+void	free_all(t_data *data);
 
 #endif
