@@ -6,7 +6,7 @@
 #    By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/19 17:47:10 by hkaddour          #+#    #+#              #
-#    Updated: 2022/10/21 14:45:54 by hkaddour         ###   ########.fr        #
+#    Updated: 2022/10/21 15:58:44 by hkaddour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,17 @@ SRCS = src/main.c \
 			 src/pipex_utils.c \
 			 src/execution.c
 
+SRCS_B = bonus/main_bonus.c \
+				 bonus/heredoc.c \
+				 bonus/line.c \
+				 bonus/pipeline.c \
+				 bonus/utils_bonus.c
+
 LIB = libft/libft.a
 INF = infile
 OFL = ofiles
 OBJS = $(SRCS:.c=.o)
+OBJS_B = $(SRCS_B:.c=.o)
 
 BGreen=\033[1;32m
 BYellow=\033[1;33m
@@ -55,7 +62,12 @@ $(NAME): $(LIB) $(OBJS)
 $(LIB):
 	@make -C ./libft
 
-bonus:
+bonus: $(LIB) $(OBJS_B)
+	@echo "$(BYellow) make file $(BGreen) $(INF)"
+	@touch $(INF)
+	@mkdir $(OFL)
+	mv *.o $(OFL)
+	$(CC) $(OFL)/* $(LIB) $(CFLAGS) -o $(NAME)
 
 clean:
 	@echo "$(BRed) Clean"

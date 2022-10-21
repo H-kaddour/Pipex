@@ -6,7 +6,7 @@
 /*   By: hkaddour <hkaddour@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:51:19 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/21 14:43:49 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/10/21 15:34:08 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,19 @@ void	read_heredoc_input(t_data *data)
 {
 	char	*line;
 	char	*hrdoc;
+	int		len;
 
 	hrdoc = ft_strdup("");
 	while (21)
 	{
+		ft_putstr_fd("> ", 0);
 		line = grab_line(0);
 		if (!line)
 			exit(0);
-		if (ft_strncmp(line, data->av[1], ft_strlen(line)))
+		len = ft_strlen(data->av[1]);
+		if (ft_strlen(line) > ft_strlen(data->av[1]))
+			len = ft_strlen(line);
+		if (!ft_strncmp(line, data->av[1], len))
 			break ;
 		hrdoc = ft_strjoin(hrdoc, ft_strjoin(line, "\n"));
 	}
@@ -47,13 +52,13 @@ void	run_cmd_heredoc(t_data *data)
 	if (pipe(data->fd) < 0)
 	{
 		perror("Error in pipe\n");
-		exit(2);
+		exit(1);
 	}
 	pid = fork();
 	if (pid < 0)
 	{
 		perror("Error in fork\n");
-		exit(2);
+		exit(1);
 	}
 	if (pid == 0)
 	{
@@ -69,6 +74,7 @@ void	run_cmd_heredoc(t_data *data)
 		close(data->hrdoc_f);
 		dup2(data->fd[0], STDIN_FILENO);
 		dup2(data->f_out, STDOUT_FILENO);
+		close(data->fd[0]);
 		execute(data->av[3], data);
 	}
 }
@@ -85,13 +91,13 @@ void	run_heredoc(t_data *data)
 	if (pipe(data->fd) < 0)
 	{
 		perror("Error in pipe\n");
-		exit(2);
+		exit(1);
 	}
 	pid = fork();
 	if (pid < 0)
 	{
 		perror("Error in fork\n");
-		exit(2);
+		exit(1);
 	}
 	if (pid == 0)
 	{
