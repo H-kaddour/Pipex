@@ -1,30 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/14 13:54:48 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/19 09:51:11 by hkaddour         ###   ########.fr       */
+/*   Created: 2021/11/01 18:54:08 by hkaddour          #+#    #+#             */
+/*   Updated: 2021/11/09 17:21:42 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#include "../include/pipex.h"
-
-void	get_path(t_data *data, char **env)
+int	ft_atoi(const char *str)
 {
-	int		i;
-	int		j;
-	char	*ptr;
+	int	i;
+	int	sign;
+	int	rslt;
 
 	i = 0;
-	j = 5;
-	while (env[i] && ft_strncmp(env[i], "PATH=", j))
+	sign = 1;
+	rslt = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (!env[i])
-		exit(2);
-	ptr = ft_calloc(ft_strlen(&env[i][j]) + 1, sizeof(char));
-	strlcpy(ptr, &env[i][j], ft_strlen(&env[i][j]) + 1);
-	data->path = ft_split(ptr, ':');
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign *= -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		rslt = (rslt * 10) + (str[i] - '0');
+		i++;
+	}
+	return (rslt * sign);
 }

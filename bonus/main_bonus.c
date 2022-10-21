@@ -1,32 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hkaddour <hkaddour@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/07 15:03:00 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/19 09:23:07 by hkaddour         ###   ########.fr       */
+/*   Created: 2022/10/19 09:21:19 by hkaddour          #+#    #+#             */
+/*   Updated: 2022/10/21 14:31:52 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
+int	check_if_heredoc(t_data *data)
+{
+	if (!ft_strncmp(data->av[0], "here_doc", ft_strlen(data->av[0])))
+		return (1);
+	return (0);
+}
+
 int	main(int ac, char **av, char **env)
 {
-	t_data	data;
+	t_data data;
 
-	if (ac == 5)
+	if (ac <= 5)
 	{
-		data.f_in = open(av[1], O_RDONLY);
-		if (data.f_in < 0)
-			perror("file in fails to read :(\n");
-		data.f_out = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0664);
-		if (data.f_out < 0)
-			perror("file out fails to create :(\n");
+		data.len_args = ac - 1;
 		data.av = &av[1];
 		data.env = env;
-		processes_making(&data);
+		if (check_if_heredoc(&data))
+			run_heredoc(&data);
+		//else
+		//	pipeline();
 	}
 	else
 		perror("Check your argument!\n[program] \

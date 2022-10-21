@@ -1,30 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/14 13:54:48 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/19 09:51:11 by hkaddour         ###   ########.fr       */
+/*   Created: 2021/11/08 18:11:37 by hkaddour          #+#    #+#             */
+/*   Updated: 2022/10/18 17:03:36 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#include "../include/pipex.h"
-
-void	get_path(t_data *data, char **env)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		i;
-	int		j;
+	int		len;
+	char	*str1;
+	char	*str2;
 	char	*ptr;
 
-	i = 0;
-	j = 5;
-	while (env[i] && ft_strncmp(env[i], "PATH=", j))
-		i++;
-	if (!env[i])
-		exit(2);
-	ptr = ft_calloc(ft_strlen(&env[i][j]) + 1, sizeof(char));
-	strlcpy(ptr, &env[i][j], ft_strlen(&env[i][j]) + 1);
-	data->path = ft_split(ptr, ':');
+	str1 = (char *) s1;
+	str2 = (char *) s2;
+	if (!s1 || !s2)
+		return (0);
+	len = ft_strlen(str1) + ft_strlen(str2);
+	ptr = ft_calloc(len + 1, sizeof(char));
+	while (*str1)
+		*ptr++ = *str1++;
+	while (*str2)
+		*ptr++ = *str2++;
+	return ((char *) ptr - len);
 }

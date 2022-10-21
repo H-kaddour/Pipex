@@ -6,7 +6,7 @@
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:29:44 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/18 18:08:49 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/10/21 14:26:13 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,30 @@ typedef struct s_data
 	char	**env;
 	char	**path;
 	char	**cmd_opt;
-	char	**leak;
-	int		i;
+	int		len_args;
+	int		hrdoc_f;
 	int		proc;
 	int		fd[2];
 	int		f_in;
 	int		f_out;
 }	t_data;
 
+typedef struct grab_line
+{
+	char		*ptr;
+	char		*tmp;
+	char		*buff;
+	char		*line;
+}	t_gnl;
+
+/******* Function mandatory **********/
 void	processes_making(t_data *data);
 void	get_path(t_data *data, char **env);
-char *add_join(t_data *data, char *path, char *cmd);
-void	free_all(t_data *data);
+
+/******* Function bonus **********/
+void	get_path(t_data *data, char **env);
+void	execute(char *cmd, t_data *data);
+void	run_heredoc(t_data *data);
+char	*grab_line(int fd);
 
 #endif

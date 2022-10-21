@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/14 13:54:48 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/19 09:51:11 by hkaddour         ###   ########.fr       */
+/*   Created: 2021/11/13 15:14:09 by hkaddour          #+#    #+#             */
+/*   Updated: 2021/12/08 18:21:06 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#include "../include/pipex.h"
-
-void	get_path(t_data *data, char **env)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	int		i;
-	int		j;
-	char	*ptr;
+	unsigned int	i;
+	char			*str;
+	char			*ptr;
 
 	i = 0;
-	j = 5;
-	while (env[i] && ft_strncmp(env[i], "PATH=", j))
+	if (!s || !f)
+		return (NULL);
+	str = (char *) s;
+	ptr = (char *) malloc(sizeof(char) * ft_strlen(str) + 1);
+	if (!ptr)
+		return (NULL);
+	while (str[i])
+	{
+		ptr[i] = f(i, str[i]);
 		i++;
-	if (!env[i])
-		exit(2);
-	ptr = ft_calloc(ft_strlen(&env[i][j]) + 1, sizeof(char));
-	strlcpy(ptr, &env[i][j], ft_strlen(&env[i][j]) + 1);
-	data->path = ft_split(ptr, ':');
+	}
+	ptr[i] = '\0';
+	return (ptr);
 }

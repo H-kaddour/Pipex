@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/14 13:54:48 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/19 09:51:11 by hkaddour         ###   ########.fr       */
+/*   Created: 2021/11/02 15:15:08 by hkaddour          #+#    #+#             */
+/*   Updated: 2021/12/03 17:48:17 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#include "../include/pipex.h"
-
-void	get_path(t_data *data, char **env)
+int	ft_memcmp(const void *str1, const void *str2, size_t n)
 {
-	int		i;
-	int		j;
-	char	*ptr;
+	size_t			i;
+	unsigned char	*str;
+	unsigned char	*str3;
 
 	i = 0;
-	j = 5;
-	while (env[i] && ft_strncmp(env[i], "PATH=", j))
-		i++;
-	if (!env[i])
-		exit(2);
-	ptr = ft_calloc(ft_strlen(&env[i][j]) + 1, sizeof(char));
-	strlcpy(ptr, &env[i][j], ft_strlen(&env[i][j]) + 1);
-	data->path = ft_split(ptr, ':');
+	str = (unsigned char *) str1;
+	str3 = (unsigned char *) str2;
+	while (n > i)
+	{
+		if (str[i] == str3[i])
+			i++;
+		else if (str[i] != str3[i])
+			return (str[i] - str3[i]);
+	}
+	return (0);
 }

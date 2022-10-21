@@ -6,14 +6,14 @@
 #    By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/19 17:47:10 by hkaddour          #+#    #+#              #
-#    Updated: 2022/10/18 18:31:35 by hkaddour         ###   ########.fr        #
+#    Updated: 2022/10/21 14:45:54 by hkaddour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 CC = gcc
-HEADER = ft_pipex.h
-CFLAGS = -Wall -Wextra -Werror
+HEADER = include/pipex.h
+CFLAGS = -Wall -Wextra -Werror -g
 SRCS = src/main.c \
 			 src/pipex_utils.c \
 			 src/execution.c
@@ -44,25 +44,27 @@ all : $(NAME)
 $(NAME): $(LIB) $(OBJS)
 	@echo "$(BYellow) make file $(BGreen) $(INF)"
 	@touch $(INF)
-	@echo "$(BYellow) Make $(BGreen) $@"
-	@mv $(OBJS) $(OFL)
-	@$(CC) $(OFL)/* -o $@
+	@mkdir $(OFL)
+	mv *.o $(OFL)
+	$(CC) $(OFL)/* $(LIB) $(CFLAGS) -o $@
 
 %.o: %.c
 	@echo "$(BPurple) Compile $(BYellow) $^ $(BGreen)to $@"
-	@$(CC) $(CFLAGS) -c $^ -I $(HEADER) 
+	$(CC) $(CFLAGS) -c $^ -I $(HEADER) 
 
 $(LIB):
-	@mkdir $(OFL)
 	@make -C ./libft
+
+bonus:
 
 clean:
 	@echo "$(BRed) Clean"
 	@rm -rf $(OFL) $(INF)
 
-fclean: clean
+#in clean delete infile and outfile
+fclean:
 	@echo "$(BRed) Fclean"
-	@rm -rf $(OFL) $(INF) $(NAME)
+	@rm -rf $(OFL) $(INF) $(NAME) outfile
 
 re: fclean all
 
