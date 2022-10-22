@@ -6,7 +6,7 @@
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:29:44 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/21 22:36:34 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/10/22 15:41:19 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@
 # include <sys/types.h>
 # include "../libft/libft.h"
 
+typedef struct s_cmd
+{
+	char	*cmd;
+	int		f_in;
+	int		f_out;
+	int		*tab_pipe;
+	struct s_cmd *next;
+} t_cmd;
+
 typedef struct s_data
 {
 	char	**av;
@@ -32,6 +41,7 @@ typedef struct s_data
 	int		fd[2];
 	int		f_in;
 	int		f_out;
+	t_cmd	*cmd;
 }	t_data;
 
 typedef struct grab_line
@@ -54,58 +64,3 @@ void	run_heredoc(t_data *data);
 char	*grab_line(int fd);
 
 #endif
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-
-/*
- * loop over commands by sharing
- * pipes.
- */
-static void
-pipeline(char ***cmd)
-{
-	int fd[2];
-	pid_t pid;
-	int fdd = 0;				/* Backup */
-
-	while (*cmd != NULL) {
-		pipe(fd);
-		if ((pid = fork()) == -1) {
-			perror("fork");
-			exit(1);
-		}
-		else if (pid == 0) {
-			dup2(fdd, 0);
-			if (*(cmd + 1) != NULL) {
-				dup2(fd[1], 1);
-			}
-			close(fd[0]);
-			execvp((*cmd)[0], *cmd);
-			exit(1);
-		}
-		else {
-			wait(NULL); 		/* Collect childs */
-			close(fd[1]);
-			fdd = fd[0];
-			cmd++;
-		}
-	}
-}
-
-/*
- * Compute multi-pipeline based
- * on a command list.
- */
-int
-main(int argc, char *argv[])
-{
-	char *ls[] = {"ls", "-al", NULL};
-	char *rev[] = {"rev", NULL};
-	char *nl[] = {"nl", NULL};
-	char *cat[] = {"cat", "-e", NULL};
-	char **cmd[] = {ls, rev, nl, cat, NULL};
-
-	pipeline(cmd);
-	return (0);
-}
