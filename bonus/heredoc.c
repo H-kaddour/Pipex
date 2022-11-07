@@ -6,27 +6,34 @@
 /*   By: hkaddour <hkaddour@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:51:19 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/21 15:34:08 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/11/07 15:20:10 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int	check_heredoc_error(t_data *data)
+static void	check_heredoc_error(t_data *data)
 {
-	if (data->len_args == 5)
-		return (0);
-	perror("error in args of heredoc\n");
-	return (1);
+	if (data->len_args != 5)
+		error("Recheck your args\n");
 }
 
-void	read_heredoc_input(t_data *data)
+static void	read_heredoc_helper(t_data *data)
+{
+	ft_putstr_fd(data->hrdoc, data->fd[1]);
+	free(data->hrdoc);
+	close(data->fd[1]);
+	exit(0);
+}
+
+static void	read_heredoc_input(t_data *data)
 {
 	char	*line;
-	char	*hrdoc;
+	char	*n_line;
+	char	*hld;
 	int		len;
 
-	hrdoc = ft_strdup("");
+	data->hrdoc = ft_strdup("");
 	while (21)
 	{
 		ft_putstr_fd("> ", 0);
@@ -38,28 +45,25 @@ void	read_heredoc_input(t_data *data)
 			len = ft_strlen(line);
 		if (!ft_strncmp(line, data->av[1], len))
 			break ;
-		hrdoc = ft_strjoin(hrdoc, ft_strjoin(line, "\n"));
+		n_line = ft_strjoin(line, "\n");
+		hld = data->hrdoc;
+		data->hrdoc = ft_strjoin(data->hrdoc, n_line);
+		free(n_line);
+		free(line);
+		free(hld);
 	}
-	ft_putstr_fd(hrdoc, data->fd[1]);
-	close(data->fd[1]);
-	exit(0);
+	read_heredoc_helper(data);
 }
 
-void	run_cmd_heredoc(t_data *data)
+static void	run_cmd_heredoc(t_data *data)
 {
 	int	pid;
 
 	if (pipe(data->fd) < 0)
-	{
-		perror("Error in pipe\n");
-		exit(1);
-	}
+		error("Error in pipe\n");
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("Error in fork\n");
-		exit(1);
-	}
+		error("Error in fork\n");
 	if (pid == 0)
 	{
 		close(data->fd[0]);
@@ -83,22 +87,15 @@ void	run_heredoc(t_data *data)
 {
 	int		pid;
 
-	if (check_heredoc_error(data))
-		return ;
+	check_heredoc_error(data);
 	data->f_out = open(data->av[4], O_RDWR | O_CREAT | O_APPEND, 0664);
 	if (data->f_out < 0)
-		perror("file out fails to read :(\n");
+		error("file out fails to open :(\n");
 	if (pipe(data->fd) < 0)
-	{
-		perror("Error in pipe\n");
-		exit(1);
-	}
+		error("Error in pipe\n");
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("Error in fork\n");
-		exit(1);
-	}
+		error("Error in fork\n");
 	if (pid == 0)
 	{
 		close(data->fd[0]);

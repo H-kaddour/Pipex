@@ -6,27 +6,21 @@
 #    By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/19 17:47:10 by hkaddour          #+#    #+#              #
-#    Updated: 2022/10/21 15:58:44 by hkaddour         ###   ########.fr        #
+#    Updated: 2022/11/07 14:51:25 by hkaddour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
-CC = gcc
+CC = cc
 HEADER = include/pipex.h
-CFLAGS = -Wall -Wextra -Werror -g
-SRCS = src/main.c \
-			 src/pipex_utils.c \
-			 src/execution.c
+CFLAGS = -Wall -Wextra -Werror
 
-SRCS_B = bonus/main_bonus.c \
-				 bonus/heredoc.c \
-				 bonus/line.c \
-				 bonus/pipeline.c \
-				 bonus/utils_bonus.c
+SRCS = $(addprefix mandatory/, main.c execution_utils.c execution.c)
+SRCS_B = $(addprefix bonus/, main_bonus.c heredoc.c gnl.c pipeline.c \
+				 utils_bonus.c ../mandatory/execution_utils.c)
 
 LIB = libft/libft.a
 INF = infile
-OFL = ofiles
 OBJS = $(SRCS:.c=.o)
 OBJS_B = $(SRCS_B:.c=.o)
 
@@ -36,10 +30,28 @@ BBlue=\033[1;34m
 BPurple=\033[1;38;5;205m
 BRed=\033[1;31m
  
-all : $(NAME)
-	
-	@echo " "
-	@echo "$(BGreen)==================================="
+all : tag $(INF) $(NAME)
+
+$(NAME): $(LIB) $(OBJS)
+	@echo "\n$(BBlue)Compline object files to $(BPurple)$(NAME)"
+	@$(CC) $(OBJS) $(LIB) -o $@
+
+%.o: %.c $(HEADER)
+	@/bin/echo -n "."
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(HEADER)
+
+bonus: $(INF) $(LIB) $(OBJS_B)
+	@/bin/echo -n "."
+	@$(CC) $(OBJS_B) $(LIB) -o $(NAME)
+
+$(LIB):
+	@make -C ./libft
+
+$(INF):
+	@touch $@
+
+tag:
+	@echo "$(BGreen)"
 	@echo "██████╗ ██╗██████╗ ███████╗██╗  ██╗"
 	@echo "██╔══██╗██║██╔══██╗██╔════╝╚██╗██╔╝"
 	@echo "██████╔╝██║██████╔╝█████╗   ╚███╔╝ "
@@ -48,36 +60,16 @@ all : $(NAME)
 	@echo "╚═╝     ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝"
 
 
-$(NAME): $(LIB) $(OBJS)
-	@echo "$(BYellow) make file $(BGreen) $(INF)"
-	@touch $(INF)
-	@mkdir $(OFL)
-	mv *.o $(OFL)
-	$(CC) $(OFL)/* $(LIB) $(CFLAGS) -o $@
-
-%.o: %.c
-	@echo "$(BPurple) Compile $(BYellow) $^ $(BGreen)to $@"
-	$(CC) $(CFLAGS) -c $^ -I $(HEADER) 
-
-$(LIB):
-	@make -C ./libft
-
-bonus: $(LIB) $(OBJS_B)
-	@echo "$(BYellow) make file $(BGreen) $(INF)"
-	@touch $(INF)
-	@mkdir $(OFL)
-	mv *.o $(OFL)
-	$(CC) $(OFL)/* $(LIB) $(CFLAGS) -o $(NAME)
-
 clean:
-	@echo "$(BRed) Clean"
-	@rm -rf $(OFL) $(INF)
+	@echo "$(BRed)clean"
+	@make clean -C ./libft
+	@rm -rf $(OBJS) $(OBJS_B)
 
-#in clean delete infile and outfile
 fclean:
-	@echo "$(BRed) Fclean"
-	@rm -rf $(OFL) $(INF) $(NAME) outfile
+	@echo "$(BRed)fclean"
+	@make fclean -C ./libft
+	@rm -rf $(NAME) $(OBJS) $(OBJS_B)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus tag clean fclean re

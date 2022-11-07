@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   line.c                                             :+:      :+:    :+:   */
+/*   gnl.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/16 16:44:30 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/19 10:21:45 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/11/07 14:35:07 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ static char	*get_line(char *str, t_gnl *t_line)
 
 	i = 0;
 	if (!str)
-		return (NULL);
+		return (0);
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[0] == '\0')
-		return (NULL);
+		return (0);
 	t_line->ptr = malloc(sizeof(char) * i);
 	if (!t_line->ptr)
-		return (NULL);
+		return (0);
 	i = 0;
 	while (str[i] && str[i] != '\n')
 	{
@@ -70,7 +70,7 @@ static char	*read_line(char *str, int fd, t_gnl *t_line)
 		if (i == -1)
 		{
 			free(t_line->buff);
-			return (NULL);
+			return (0);
 		}
 		t_line->buff[i] = 0;
 		t_line->tmp = str;
@@ -94,13 +94,13 @@ char	*grab_line(int fd)
 	t_gnl		t_line;
 
 	if (fd < 0)
-		return (NULL);
+		return (0);
 	t_line.buff = malloc(sizeof(char) * 2);
 	if (!t_line.buff)
-		return (NULL);
+		return (0);
 	str = read_line(str, fd, &t_line);
 	if (!str)
-		return (NULL);
+		return (0);
 	t_line.line = get_line(str, &t_line);
 	str = next_line(str);
 	return (t_line.line);

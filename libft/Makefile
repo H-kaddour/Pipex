@@ -6,15 +6,15 @@
 #    By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/04 20:10:00 by hkaddour          #+#    #+#              #
-#    Updated: 2022/10/18 18:21:28 by hkaddour         ###   ########.fr        #
+#    Updated: 2022/11/07 14:54:22 by hkaddour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
-cc = gcc
-header = libft.h
+CC = gcc
+HEADER = libft.h
 CFLAGS = -Wall -Wextra -Werror
-srcs =	ft_atoi.c \
+SRCS =	ft_atoi.c \
 		ft_putnbr_fd.c \
 		ft_strlen.c \
 		ft_bzero.c \
@@ -49,23 +49,22 @@ srcs =	ft_atoi.c \
 		ft_strlcpy.c \
 		ft_toupper.c
 
-objs = $(srcs:.c=.o)
+OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
-%.o: %.c
+%.o: %.c $(HEADER)
 	@/bin/echo -n "."
-	@$(cc) $(CFLAGS) -c $^ -I $(header)
+	@$(CC) $(CFLAGS) -c $< -I $(HEADER)
 
-$(NAME): $(objs)
-	@echo
+$(NAME): $(OBJS)
 	@ar -rc $@ $^
 
 clean:
-	rm -rf $(objs)
+	@rm -rf $(OBJS)
 
 fclean : clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all
 

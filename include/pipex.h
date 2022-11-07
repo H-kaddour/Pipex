@@ -6,7 +6,7 @@
 /*   By: hkaddour <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:29:44 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/22 15:41:19 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/11/07 15:29:04 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 
 typedef struct s_cmd
 {
-	char	*cmd;
-	int		f_in;
-	int		f_out;
-	int		*tab_pipe;
-	struct s_cmd *next;
-} t_cmd;
+	char			*cmd;
+	int				f_in;
+	int				f_out;
+	int				*tab_pipe;
+	struct s_cmd	*next;
+}	t_cmd;
 
 typedef struct s_data
 {
@@ -37,6 +37,7 @@ typedef struct s_data
 	char	**cmd_opt;
 	int		len_args;
 	int		hrdoc_f;
+	char	*hrdoc;
 	int		proc;
 	int		fd[2];
 	int		f_in;
@@ -54,12 +55,12 @@ typedef struct grab_line
 
 /******* Function mandatory **********/
 void	processes_making(t_data *data);
-void	get_path(t_data *data, char **env);
+void	execute(char *cmd, t_data *data);
 
 /******* Function bonus **********/
+void	error(char *msg);
+void	add_cmd(t_data *data);
 void	pipeline(t_data *data);
-void	get_path(t_data *data, char **env);
-void	execute(char *cmd, t_data *data);
 void	run_heredoc(t_data *data);
 char	*grab_line(int fd);
 

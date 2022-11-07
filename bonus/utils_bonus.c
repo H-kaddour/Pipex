@@ -6,53 +6,38 @@
 /*   By: hkaddour <hkaddour@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 11:25:43 by hkaddour          #+#    #+#             */
-/*   Updated: 2022/10/21 14:24:56 by hkaddour         ###   ########.fr       */
+/*   Updated: 2022/11/07 15:30:11 by hkaddour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	get_path(t_data *data, char **env)
+void	error(char *msg)
+{
+	perror(msg);
+	exit(2);
+}
+
+void	add_cmd(t_data *data)
 {
 	int		i;
 	int		j;
-	char	*ptr;
+	t_cmd	*head;
+	t_cmd	*node;
 
-	i = 0;
-	j = 5;
-	while (env[i] && ft_strncmp(env[i], "PATH=", j))
-		i++;
-	if (!env[i])
-		exit(2);
-	ptr = ft_calloc(ft_strlen(&env[i][j]) + 1, sizeof(char));
-	strlcpy(ptr, &env[i][j], ft_strlen(&env[i][j]) + 1);
-	data->path = ft_split(ptr, ':');
-}
-
-void	execute(char *cmd, t_data *data)
-{
-	int		i;
-	char	*pth_cmd;
-	char	*hold;
-
-	i = 0;
-	get_path(data, data->env);
-	data->cmd_opt = ft_split(cmd, ' ');
-	while (data->path[i])
+	i = 1;
+	j = 1;
+	head = ft_calloc(1, sizeof(t_cmd));
+	head->cmd = data->av[j++];
+	head->f_in = data->f_in;
+	data->cmd = head;
+	while (i < data->len_args - 2)
 	{
-		hold = ft_strjoin("/", data->cmd_opt[0]);
-		pth_cmd = ft_strjoin(data->path[i], hold);
-		if (!access(pth_cmd, F_OK))
-		{
-			if (!access(pth_cmd, X_OK))
-				execve(pth_cmd, data->cmd_opt, data->env);
-			else
-				perror("Permission denied :/\n");
-		}
-		free(hold);
-		free(pth_cmd);
+		node = ft_calloc(1, sizeof(t_cmd));
+		node->cmd = data->av[j++];
+		head->next = node;
+		head = node;
 		i++;
 	}
-	perror("Invalid command! :/\n");
-	exit(1);
+	head->f_out = data->f_out;
 }
